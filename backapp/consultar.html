@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Mensagens</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Consultar Mensagens</h1>
+        <div id="messages"></div>
+    </div>
+
+    <script>
+        fetch('https://parseapi.back4app.com/classes/MyCustomClassName', {
+            method: 'GET',
+            headers: {
+                'X-Parse-Application-Id': 'JTXcKh27LDTTgP0DVSrsZb3Jx6iGwdmXpkUyFbra',
+                'X-Parse-REST-API-Key': 'KlekZZFLbaGHlvxAjIjxbJzQt9oVGOb89cckWQ6V',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const messagesContainer = document.getElementById('messages');
+            data.results.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.innerHTML = `
+                    <h3>Nome: ${message.name}</h3>
+                    <p>E-mail: ${message.email}</p>
+                    <p>Assunto: ${message.subject}</p>
+                    <p>Mensagem: ${message.message}</p>
+                    <div class="reply-form">
+                        <label for="response-${message.objectId}">Resposta:</label>
+                        <textarea id="response-${message.objectId}" name="response" rows="4" cols="50"></textarea>
+                        <br>
+                        <input type="checkbox" id="finished-${message.objectId}" name="finished">
+                        <label for="finished-${message.objectId}">Finalizado</label>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageDiv);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
